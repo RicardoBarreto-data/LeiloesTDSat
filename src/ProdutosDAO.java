@@ -86,7 +86,67 @@ public class ProdutosDAO {
         }
     }
 
-    return listagem;
+    return listagem;}
+   
+    public ArrayList<ProdutosDTO> listarProdutosVendidos() {
+    ArrayList<ProdutosDTO> vendidos = new ArrayList<>();
+    Connection conn = null;
+    PreparedStatement pstm = null;
+    ResultSet resultset = null;
+
+    try {
+        conn = new conectaDAO().connectDB();
+        String sql = "SELECT * FROM produtos WHERE status = 'Vendido'";
+        pstm = conn.prepareStatement(sql);
+        resultset = pstm.executeQuery();
+
+        while (resultset.next()) {
+            ProdutosDTO produto = new ProdutosDTO();
+            produto.setId(resultset.getInt("id"));
+            produto.setNome(resultset.getString("nome"));
+            produto.setValor(resultset.getInt("valor"));
+            produto.setStatus(resultset.getString("status"));
+
+            vendidos.add(produto);
+        }
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Erro ao listar produtos vendidos: " + e.getMessage());
+    } finally {
+        try {
+            if (resultset != null) resultset.close();
+            if (pstm != null) pstm.close();
+            if (conn != null) conn.close();
+        } catch (Exception e) {
+            System.out.println("Erro ao fechar recursos: " + e.getMessage());
+        }
+    }
+
+    return vendidos;
 }
+
+    
+   public void venderProduto(int id) {
+    Connection conn = null;
+    PreparedStatement pstm = null;
+
+    try {
+        conn = new conectaDAO().connectDB();
+        String sql = "UPDATE produtos SET status = 'Vendido' WHERE id = ?";
+        pstm = conn.prepareStatement(sql);
+        pstm.setInt(1, id);
+        pstm.executeUpdate();
+        JOptionPane.showMessageDialog(null, "Produto vendido com sucesso!");
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Erro ao vender produto: " + e.getMessage());
+    } finally {
+        try {
+            if (pstm != null) pstm.close();
+            if (conn != null) conn.close();
+        } catch (Exception e) {
+            System.out.println("Erro ao fechar recursos: " + e.getMessage());
+        }
+    }
+  }
 }
 

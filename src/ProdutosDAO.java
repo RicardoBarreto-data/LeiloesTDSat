@@ -89,7 +89,7 @@ public class ProdutosDAO {
     return listagem;}
    
     public ArrayList<ProdutosDTO> listarProdutosVendidos() {
-    ArrayList<ProdutosDTO> vendidos = new ArrayList<>();
+    ArrayList<ProdutosDTO> listaVendidos = new ArrayList<>();
     Connection conn = null;
     PreparedStatement pstm = null;
     ResultSet resultset = null;
@@ -107,7 +107,7 @@ public class ProdutosDAO {
             produto.setValor(resultset.getInt("valor"));
             produto.setStatus(resultset.getString("status"));
 
-            vendidos.add(produto);
+            listaVendidos.add(produto);
         }
 
     } catch (Exception e) {
@@ -122,8 +122,9 @@ public class ProdutosDAO {
         }
     }
 
-    return vendidos;
+    return listaVendidos;
 }
+
 
     
    public void venderProduto(int id) {

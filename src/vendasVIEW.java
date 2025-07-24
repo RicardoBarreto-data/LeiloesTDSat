@@ -7,6 +7,7 @@
  *
  * @author Micro
  */
+
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
@@ -108,4 +109,3 @@ public class vendasVIEW extends javax.swing.JFrame {
     private javax.swing.JTable tabelaVendas;
     // End of variables declaration
 }
-

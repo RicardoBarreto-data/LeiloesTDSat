@@ -89,41 +89,32 @@ public class ProdutosDAO {
     return listagem;}
    
     public ArrayList<ProdutosDTO> listarProdutosVendidos() {
-    ArrayList<ProdutosDTO> vendidos = new ArrayList<>();
-    Connection conn = null;
-    PreparedStatement pstm = null;
-    ResultSet resultset = null;
+    ArrayList<ProdutosDTO> lista = new ArrayList<>();
+    String sql = "SELECT * FROM produtos WHERE status = 'Vendido'";
 
     try {
-        conn = new conectaDAO().connectDB();
-        String sql = "SELECT * FROM produtos WHERE status = 'Vendido'";
-        pstm = conn.prepareStatement(sql);
-        resultset = pstm.executeQuery();
+        Connection conn = new conectaDAO().connectDB();
+        PreparedStatement pstm = conn.prepareStatement(sql);
+        ResultSet rs = pstm.executeQuery();
 
-        while (resultset.next()) {
+        while (rs.next()) {
             ProdutosDTO produto = new ProdutosDTO();
-            produto.setId(resultset.getInt("id"));
-            produto.setNome(resultset.getString("nome"));
-            produto.setValor(resultset.getInt("valor"));
-            produto.setStatus(resultset.getString("status"));
+            produto.setId(rs.getInt("id"));
+            produto.setNome(rs.getString("nome"));
+            produto.setValor(rs.getInt("valor"));
+            produto.setStatus(rs.getString("status"));
 
-            vendidos.add(produto);
+            lista.add(produto);
         }
 
+        conn.close();
     } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, "Erro ao listar produtos vendidos: " + e.getMessage());
-    } finally {
-        try {
-            if (resultset != null) resultset.close();
-            if (pstm != null) pstm.close();
-            if (conn != null) conn.close();
-        } catch (Exception e) {
-            System.out.println("Erro ao fechar recursos: " + e.getMessage());
-        }
+        System.out.println("Erro: " + e.getMessage());
     }
 
-    return vendidos;
+    return lista;
 }
+
 
     
    public void venderProduto(int id) {

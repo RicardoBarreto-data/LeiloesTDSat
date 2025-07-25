@@ -136,23 +136,22 @@ public class listagemVIEW extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnVenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVenderActionPerformed
-        String id = id_produto_venda.getText();
-        
-        ProdutosDAO produtosdao = new ProdutosDAO();
-        
-        try {
-    int idProduto = Integer.parseInt(id);
-    produtosdao.venderProduto(idProduto); // Chamada que estava comentada
-    listarProdutos(); // Atualiza a tabela depois da venda
-    id_produto_venda.setText(""); // Limpa o campo de ID
-} catch (NumberFormatException ex) {
-    javax.swing.JOptionPane.showMessageDialog(this, "Digite um número válido para o ID.");
-      }
+    String id = id_produto_venda.getText();
+    ProdutosDAO produtosdao = new ProdutosDAO();
+
+    try {
+        int idProduto = Integer.parseInt(id);
+        produtosdao.venderProduto(idProduto);
+        listarProdutos(); // atualiza a tabela
+        id_produto_venda.setText(""); // limpa o campo
+    } catch (NumberFormatException ex) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Digite um número válido para o ID.");
+     }
     }//GEN-LAST:event_btnVenderActionPerformed
 
     private void btnVendasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVendasActionPerformed
-        //vendasVIEW vendas = new vendasVIEW(); 
-        //vendas.setVisible(true);
+        vendasVIEW vendas = new vendasVIEW(); 
+        vendas.setVisible(true);
     }//GEN-LAST:event_btnVendasActionPerformed
 
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
@@ -208,24 +207,25 @@ public class listagemVIEW extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void listarProdutos(){
-        try {
-            ProdutosDAO produtosdao = new ProdutosDAO();
-            
-            DefaultTableModel model = (DefaultTableModel) listaProdutos.getModel();
-            model.setNumRows(0);
-            
-            ArrayList<ProdutosDTO> listagem = produtosdao.listarProdutos();
-            
-            for(int i = 0; i < listagem.size(); i++){
-                model.addRow(new Object[]{
-                    listagem.get(i).getId(),
-                    listagem.get(i).getNome(),
-                    listagem.get(i).getValor(),
-                    listagem.get(i).getStatus()
-                });
-            }
-        } catch (Exception e) {
+    try {
+        ProdutosDAO produtosdao = new ProdutosDAO();
+
+        DefaultTableModel model = (DefaultTableModel) listaProdutos.getModel();
+        model.setNumRows(0);
+
+        // Aqui a troca importante: chamar listarTodosProdutos
+        ArrayList<ProdutosDTO> listagem = produtosdao.listarTodosProdutos();
+
+        for (int i = 0; i < listagem.size(); i++) {
+            model.addRow(new Object[]{
+                listagem.get(i).getId(),
+                listagem.get(i).getNome(),
+                listagem.get(i).getValor(),
+                listagem.get(i).getStatus()
+            });
         }
-    
+    } catch (Exception e) {
+        System.out.println("Erro ao listar produtos: " + e.getMessage());
     }
+  }
 }
